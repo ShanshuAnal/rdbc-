@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jiege.community.dao.UserDao">
+
+    <resultMap id="UserResultMap" type="com.jiege.community.entity.User">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="CHAR"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="userColumn">
+        id,
+        user_id,
+        username,
+        password,
+        email,
+        phone,
+        status,
+        create_time,
+        update_time
+    </sql>
+
+
+    <insert id="insert" parameterType="com.jiege.community.entity.User" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
+        INSERT INTO sys_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            user_id,username,password,
+            <if test="email != null">
+                email,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            #{userId},#{username},#{password},
+            <if test="email != null">
+                #{email},
+            </if>
+            <if test="phone != null">
+                #{phone},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+
+    </insert>
+
+
+    <!-- ==================== SELECT ==================== -->
+
+    <select id="selectByUserId" resultMap="UserResultMap">
+        SELECT
+        <include refid="userColumn"/>
+        FROM sys_user
+        WHERE user_id = #{userId}
+        LIMIT 1
+    </select>
+
+
+    <select id="selectById" resultMap="UserResultMap">
+        SELECT
+        <include refid="userColumn"/>
+        FROM sys_user
+        WHERE id = #{id}
+        LIMIT 1
+
+    </select>
+
+
+    <select id="selectByUsername" resultMap="UserResultMap">
+        SELECT
+        <include refid="userColumn"/>
+        FROM sys_user
+        WHERE username = #{username}
+        LIMIT 1
+    </select>
+
+
+    <select id="selectByEmail" resultMap="UserResultMap">
+        SELECT
+        <include refid="userColumn"/>
+        FROM sys_user
+        WHERE email = #{email}
+        LIMIT 1
+    </select>
+
+
+    <select id="selectByPhone" resultMap="UserResultMap">
+        SELECT
+        <include refid="userColumn"/>
+        FROM sys_user
+        WHERE phone = #{phone}
+        LIMIT 1
+    </select>
+
+
+    <!-- 第一页 -->
+    <select id="getUserList" resultMap="UserResultMap">
+        SELECT
+        <include refid="userColumn"/>
+        FROM sys_user
+        WHERE status = 1
+        ORDER BY id DESC
+        LIMIT #{pageSize}
+
+    </select>
+
+
+    <!-- 游标分页：下一页（ORDER BY id DESC，下一页取比 lastId 更旧的记录） -->
+    <select id="getUserListByCursor" resultMap="UserResultMap">
+        SELECT
+        <include refid="userColumn"/>
+        FROM sys_user
+        WHERE status = 1
+        AND #{lastId} > id
+        ORDER BY id DESC
+        LIMIT #{pageSize}
+    </select>
+
+
+    <!-- ==================== UPDATE ==================== -->
+
+    <update id="updateUser" parameterType="com.jiege.community.entity.User">
+        UPDATE sys_user
+        <set>
+            <if test="username != null">
+                username = #{username},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            update_time = #{updateTime}
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
+
+    <!-- ==================== DELETE / LOGICAL DELETE ==================== -->
+
+    <update id="deleteUser">
+        UPDATE sys_user
+        SET status      = 2,
+            update_time = NOW()
+        WHERE user_id = #{userId}
+    </update>
+
+</mapper>
