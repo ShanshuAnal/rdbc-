@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 public class UserVO {
+    private Long id;
     private String userId;
     private String username;
     private String email;
@@ -22,6 +23,7 @@ public class UserVO {
     private LocalDateTime createTime;
 
     public UserVO(User newUser) {
+        this.id = newUser.getId();
         this.userId = newUser.getUserId();
         this.username = newUser.getUsername();
         this.email = newUser.getEmail();
