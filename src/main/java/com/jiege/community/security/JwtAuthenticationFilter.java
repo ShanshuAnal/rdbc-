@@ -1,10 +1,8 @@
-package com.jiege.community.filter;
+package com.jiege.community.security;
 
 import com.jiege.community.dao.UserDao;
 import com.jiege.community.entity.User;
 import com.jiege.community.enums.UserStatus;
-import com.jiege.community.security.JwtUtil;
-import com.jiege.community.security.LoginUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -64,7 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 User user = userDao.selectByUserId(userId);
                 if (user != null && UserStatus.NORMAL.getStatus() == user.getStatus()) {
                     // 4. 认证通过:principal 放 LoginUser,Controller 可用 @AuthenticationPrincipal 取到
-                    LoginUser loginUser = new LoginUser(userId, user.getUsername());
+                    LoginUser loginUser = new LoginUser(userId, user.getUsername(), user);
                     // todo authorities —— 权限列表,现在空 List.of(),阶段 5 做角色权限时就在这里填
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(loginUser, null, List.of());
                     // 放入 SecurityContextHolder(本质是 ThreadLocal,请求结束自动清理)

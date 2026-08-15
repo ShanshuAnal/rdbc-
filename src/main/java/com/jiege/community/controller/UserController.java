@@ -3,7 +3,7 @@ package com.jiege.community.controller;
 import com.jiege.community.dto.PageInfo;
 import com.jiege.community.dto.UserCreateRequestBody;
 import com.jiege.community.dto.UserUpdateRequestBody;
-import com.jiege.community.entity.HttpResponse;
+import com.jiege.community.common.HttpResponse;
 import com.jiege.community.service.UserService;
 import com.jiege.community.vo.UserVO;
 import jakarta.validation.Valid;

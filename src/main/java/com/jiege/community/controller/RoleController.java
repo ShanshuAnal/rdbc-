@@ -4,7 +4,7 @@ import com.jiege.community.dto.PageInfo;
 import com.jiege.community.dto.RoleCreateRequestBody;
 import com.jiege.community.dto.RoleStatusUpdateRequestBody;
 import com.jiege.community.dto.RoleUpdateRequestBody;
-import com.jiege.community.entity.HttpResponse;
+import com.jiege.community.common.HttpResponse;
 import com.jiege.community.service.RoleService;
 import com.jiege.community.vo.RoleVO;
 import jakarta.validation.Valid;

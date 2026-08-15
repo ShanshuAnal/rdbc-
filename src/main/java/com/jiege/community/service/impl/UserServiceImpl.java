@@ -1,16 +1,14 @@
 package com.jiege.community.service.impl;
 
 import com.jiege.community.dao.UserDao;
-import com.jiege.community.dto.LoginRequestBody;
 import com.jiege.community.dto.PageInfo;
 import com.jiege.community.dto.UserCreateRequestBody;
 import com.jiege.community.dto.UserUpdateRequestBody;
 import com.jiege.community.entity.User;
-import com.jiege.community.enums.ResponseCode;
+import com.jiege.community.common.ResponseCode;
 import com.jiege.community.enums.UserStatus;
-import com.jiege.community.exception.BusinessException;
+import com.jiege.community.common.exception.BusinessException;
 import com.jiege.community.service.UserService;
-import com.jiege.community.vo.LoginVO;
 import com.jiege.community.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

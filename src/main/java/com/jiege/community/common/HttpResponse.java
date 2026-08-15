@@ -1,4 +1,4 @@
-package com.jiege.community.entity;
+package com.jiege.community.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.jiege.community.utils;
+package com.jiege.community.common.utils;
 
 /**
  * @Author: 19599

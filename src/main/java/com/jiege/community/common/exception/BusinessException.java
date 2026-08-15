@@ -1,6 +1,6 @@
-package com.jiege.community.exception;
+package com.jiege.community.common.exception;
 
-import com.jiege.community.enums.ResponseCode;
+import com.jiege.community.common.ResponseCode;
 import lombok.Getter;
 
 /**
