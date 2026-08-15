@@ -26,6 +26,14 @@ public enum ResponseCode {
     USER_NOT_EXISTS(10004, "用户不存在"),
     PASSWORD_ERROR(10005, "用户名或者密码错误"),
 
+    /**
+     * 角色相关
+     */
+    ROLE_NAME_EXISTS(10101, "角色名称已存在"),
+    ROLE_KEY_EXISTS(10102, "角色标识已存在"),
+    ROLE_NOT_EXISTS(10104, "角色不存在"),
+    ROLE_HAS_USER(10105, "角色已绑定用户，无法删除"),
+
 
     /**
      * 参数错误

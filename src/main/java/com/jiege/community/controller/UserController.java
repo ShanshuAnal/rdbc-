@@ -78,13 +78,18 @@ public class UserController {
     }
 
     /**
-     * 查询用户列表
+     * 查询用户列表（分页参数走 query string：GET 请求不能带 body，Tomcat 会丢弃）
      *
-     * @param pageInfo 分页信息
+     * @param page   页码，从 1 开始
+     * @param size   每页条数，默认 10
+     * @param lastId 游标：上一页最后一条记录的 id，page > 1 时必传
      * @return 用户列表
      */
     @GetMapping
-    public ResponseEntity<HttpResponse<List<UserVO>>> listUsers(@RequestBody @Valid PageInfo pageInfo) {
+    public ResponseEntity<HttpResponse<List<UserVO>>> listUsers(@RequestParam(defaultValue = "1") int page,
+                                                                @RequestParam(defaultValue = "10") int size,
+                                                                @RequestParam(required = false) Long lastId) {
+        PageInfo pageInfo = new PageInfo(page, size, lastId);
         List<UserVO> users = userService.getUserList(pageInfo);
         return ResponseEntity.ok(HttpResponse.success(users));
     }

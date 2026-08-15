@@ -9,14 +9,14 @@ import java.time.LocalDateTime;
 
 /**
  * @Author: 19599
- * @Date: 2026/8/15 5:02
- * @Description:
+ * @Date: 2026/8/15 23:35
+ * @Description: 角色实体，对应 sys_role 表
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User {
+public class Role {
 
     /**
      * 数据库主键（自增）
@@ -24,32 +24,27 @@ public class User {
     private Long id;
 
     /**
-     * 用户业务ID，UUID
+     * 角色业务ID，UUID
      */
-    private String userId;
+    private String roleId;
 
     /**
-     * 用户名
+     * 角色名称
      */
-    private String username;
+    private String roleName;
 
     /**
-     * 密码哈希
+     * 角色标识
      */
-    private String password;
+    private String roleKey;
 
     /**
-     * 邮箱
+     * 角色描述
      */
-    private String email;
+    private String description;
 
     /**
-     * 手机号
-     */
-    private String phone;
-
-    /**
-     * 用户状态：0-禁用，1-正常，2-删除
+     * 角色状态：0-禁用，1-正常
      */
     private Integer status;
 

@@ -27,18 +27,21 @@ graph LR
 - [X] LoginRequestBody(带校验)、LoginVO(token + UserVO)
 - [X] AuthenService.login:查用户 → matches 比对 → 签发 token(失败统一提示,防枚举)
 - [X] AuthController:POST /register、POST /login(外部路径 /jiege/auth/xxx)
-- [~] JwtAuthenticationFilter:try-catch 已补,但 catch 后 claims 为 null 仍会 NPE —— 解析失败时应直接放行(return),不能继续执行 getSubject()
+- [X] JwtAuthenticationFilter:try-catch 已补,依赖 claims 的逻辑已整体挪入 try,篡改 token 返回 401 而非 500(联调验证通过)
 - [X] SecurityConfig:STATELESS、csrf 关闭、放行 login/register、自定义 EntryPoint 返回 JSON 401
 - [X] WebLogAspect 密码脱敏:方案 B 完成。结论修正:Jackson 3 迁移中注解是唯一例外,@JsonProperty 仍用 com.fasterxml.jackson.annotation 包名(编译已验证 tools.jackson.annotation 包不存在),三个 DTO 保持原包名即生效
 - [X] 修复 UserVO 缺 @Getter 导致序列化为空对象的 bug
-- [ ] 联调验证:注册 → 登录 → 带 token 访问受保护接口(等 try-catch 补完后进行)
+- [X] 联调验证(2026-08-15):注册 200 → 登录拿 token → 无 token 401 → 带 token 200 → 篡改 token 401(非 500)→ 错误密码/不存在用户统一 code=10005,全部通过
+- [x] 遗留修复①:UserDao.xml getUserListByCursor 游标方向已正确(`#{lastId} > id`,等价 id < lastId,取更旧记录)
+- [x] 遗留修复②:UserController.listUsers 已改 query 参数(page/size/lastId 三个 @RequestParam,参照 RoleController.listRoles),联调验证:GET /user?page=1 不带 body 返回 200(修复前 400)、无 token 401、page2 缺 lastId 返回 40000、游标翻页正常。连带修复:UserVO/RoleVO 补充自增 id 字段(游标分页客户端需拿上一页最后一条的 id,原 VO 不暴露导致翻页无法闭环)
 
-### 阶段 2:角色模块(Role)
+### 阶段 2:角色模块(Role)(已完成)
 
-- [ ] 建表 sys_role(role_id / role_name / role_key / description / status / 时间戳)
-- [ ] Role 实体、RoleDao、RoleService、RoleController
-- [ ] 接口:增删改查 + 分页列表;删除前校验是否有用户绑定
-- [ ] 状态启用/禁用
+- [X] 建表 sys_role(role_id / role_name / role_key / description / status / 时间戳)+ 提前建 sys_user_role(支撑删除前校验)
+- [X] Role 实体、RoleDao(RoleDao.xml)、RoleService、RoleController
+- [X] 接口:POST /role、PUT /role、DELETE /role/{roleId}(绑定用户时禁止,code=10105)、GET /role/{roleId}、GET /role/list(分页参数走 query string)、PUT /role/{roleId}/status
+- [X] 状态启用/禁用(0-禁用 1-启用,RoleStatus 枚举)
+- [X] 联调通过(2026-08-15):新增、roleKey 查重 10102、修改、禁用/启用、列表(游标 DESC 排序正确、page2 无 lastId 返回 40000)、删除、删除后查询 10104
 
 ### 阶段 3:菜单权限模块(Menu)
 
@@ -49,7 +52,7 @@ graph LR
 
 ### 阶段 4:关联与分配
 
-- [ ] 建表 sys_user_role(user_id + role_id)、sys_role_menu(role_id + menu_id)
+- [~] 建表 sys_user_role(user_id + role_id)、sys_role_menu(role_id + menu_id)——sys_user_role 已在阶段 2 提前建,剩 sys_role_menu
 - [ ] 给用户分配角色:PUT /user/{userId}/roles + 回显接口 GET /user/{userId}/roles
 - [ ] 给角色分配菜单:PUT /role/{roleId}/menus + 回显接口 GET /role/{roleId}/menus
 

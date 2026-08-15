@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jiege.community.dao.RoleDao">
+
+    <resultMap id="RoleResultMap" type="com.jiege.community.entity.Role">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="roleId" column="role_id" jdbcType="CHAR"/>
+        <result property="roleName" column="role_name" jdbcType="VARCHAR"/>
+        <result property="roleKey" column="role_key" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="roleColumn">
+        id,
+        role_id,
+        role_name,
+        role_key,
+        description,
+        status,
+        create_time,
+        update_time
+    </sql>
+
+    <insert id="insert" parameterType="com.jiege.community.entity.Role" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
+        INSERT INTO sys_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            role_id, role_name, role_key,
+            <if test="description != null">
+                description,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            #{roleId}, #{roleName}, #{roleKey},
+            <if test="description != null">
+                #{description},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- ==================== SELECT ==================== -->
+
+    <select id="selectByRoleId" resultMap="RoleResultMap">
+        SELECT
+        <include refid="roleColumn"/>
+        FROM sys_role
+        WHERE role_id = #{roleId}
+        LIMIT 1
+    </select>
+
+    <select id="selectByRoleKey" resultMap="RoleResultMap">
+        SELECT
+        <include refid="roleColumn"/>
+        FROM sys_role
+        WHERE role_key = #{roleKey}
+        LIMIT 1
+    </select>
+
+    <select id="selectByRoleName" resultMap="RoleResultMap">
+        SELECT
+        <include refid="roleColumn"/>
+        FROM sys_role
+        WHERE role_name = #{roleName}
+        LIMIT 1
+    </select>
+
+    <!-- 第一页：按 id 从大到小取最新的一批 -->
+    <select id="getRoleList" resultMap="RoleResultMap">
+        SELECT
+        <include refid="roleColumn"/>
+        FROM sys_role
+        ORDER BY id DESC
+        LIMIT #{pageSize}
+    </select>
+
+    <!-- 游标分页：下一页（ORDER BY id DESC，下一页取比 lastId 更旧的记录） -->
+    <select id="getRoleListByCursor" resultMap="RoleResultMap">
+        SELECT
+        <include refid="roleColumn"/>
+        FROM sys_role
+        WHERE id &lt; #{lastId}
+        ORDER BY id DESC
+        LIMIT #{pageSize}
+    </select>
+
+    <!-- ==================== UPDATE ==================== -->
+
+    <update id="updateRole" parameterType="com.jiege.community.entity.Role">
+        UPDATE sys_role
+        <set>
+            <if test="roleName != null">
+                role_name = #{roleName},
+            </if>
+            <if test="roleKey != null">
+                role_key = #{roleKey},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            update_time = #{updateTime}
+        </set>
+        WHERE role_id = #{roleId}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE sys_role
+        SET status      = #{status},
+            update_time = NOW()
+        WHERE role_id = #{roleId}
+    </update>
+
+    <!-- ==================== DELETE ==================== -->
+
+    <delete id="deleteRole">
+        DELETE
+        FROM sys_role
+        WHERE role_id = #{roleId}
+    </delete>
+
+    <select id="countUserRole" resultType="int">
+        SELECT COUNT(*)
+        FROM sys_user_role
+        WHERE role_id = #{roleId}
+    </select>
+
+</mapper>

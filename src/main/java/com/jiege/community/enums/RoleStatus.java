@@ -5,31 +5,26 @@ import lombok.Getter;
 
 /**
  * @Author: 19599
- * @Date: 2026/8/15 16:58
- * @Description: 用户状态枚举
+ * @Date: 2026/8/15 23:36
+ * @Description: 角色状态枚举
  */
 @AllArgsConstructor
 @Getter
-public enum UserStatus {
+public enum RoleStatus {
 
     /**
      * 禁用
      */
-    ABANDON(0),
+    DISABLED(0),
 
     /**
-     * 正常
+     * 启用
      */
-    NORMAL(1),
-
-    /**
-     * 删除
-     */
-    DELETE(2),
+    ENABLED(1),
     ;
 
     /**
-     * 状态值：0-禁用，1-正常，2-删除
+     * 状态值：0-禁用，1-启用
      */
     private final int status;
 }
