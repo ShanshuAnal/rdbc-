@@ -34,6 +34,16 @@ public enum ResponseCode {
     ROLE_NOT_EXISTS(10104, "角色不存在"),
     ROLE_HAS_USER(10105, "角色已绑定用户，无法删除"),
 
+    /**
+     * 菜单相关
+     */
+    MENU_NAME_EXISTS(10201, "菜单名称已存在"),
+    MENU_PERMS_EXISTS(10202, "权限标识已存在"),
+    MENU_NOT_EXISTS(10204, "菜单不存在"),
+    MENU_HAS_CHILD(10205, "菜单存在子菜单，无法删除"),
+    MENU_HAS_ROLE(10206, "菜单已被角色引用，无法删除"),
+    MENU_PARENT_NOT_EXISTS(10207, "父菜单不存在"),
+
 
     /**
      * 参数错误

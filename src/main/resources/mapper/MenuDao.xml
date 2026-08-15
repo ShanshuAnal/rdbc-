@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jiege.community.dao.MenuDao">
+
+    <resultMap id="MenuResultMap" type="com.jiege.community.entity.Menu">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="menuId" column="menu_id" jdbcType="CHAR"/>
+        <result property="parentId" column="parent_id" jdbcType="CHAR"/>
+        <result property="menuName" column="menu_name" jdbcType="VARCHAR"/>
+        <result property="path" column="path" jdbcType="VARCHAR"/>
+        <result property="perms" column="perms" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="TINYINT"/>
+        <result property="icon" column="icon" jdbcType="VARCHAR"/>
+        <result property="sort" column="sort" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="menuColumn">
+        id,
+        menu_id,
+        parent_id,
+        menu_name,
+        path,
+        perms,
+        type,
+        icon,
+        sort,
+        status,
+        create_time,
+        update_time
+    </sql>
+
+    <insert id="insert" parameterType="com.jiege.community.entity.Menu" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
+        INSERT INTO sys_menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            menu_id, menu_name, type,
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="path != null">
+                path,
+            </if>
+            <if test="perms != null">
+                perms,
+            </if>
+            <if test="icon != null">
+                icon,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            #{menuId}, #{menuName}, #{type},
+            <if test="parentId != null">
+                #{parentId},
+            </if>
+            <if test="path != null">
+                #{path},
+            </if>
+            <if test="perms != null">
+                #{perms},
+            </if>
+            <if test="icon != null">
+                #{icon},
+            </if>
+            <if test="sort != null">
+                #{sort},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- ==================== SELECT ==================== -->
+
+    <select id="selectByMenuId" resultMap="MenuResultMap">
+        SELECT
+        <include refid="menuColumn"/>
+        FROM sys_menu
+        WHERE menu_id = #{menuId}
+        LIMIT 1
+    </select>
+
+    <select id="selectByMenuName" resultMap="MenuResultMap">
+        SELECT
+        <include refid="menuColumn"/>
+        FROM sys_menu
+        WHERE menu_name = #{menuName}
+        LIMIT 1
+    </select>
+
+    <select id="selectByPerms" resultMap="MenuResultMap">
+        SELECT
+        <include refid="menuColumn"/>
+        FROM sys_menu
+        WHERE perms = #{perms}
+        LIMIT 1
+    </select>
+
+    <!-- 全部菜单，树构建用（按排序值升序） -->
+    <select id="selectAll" resultMap="MenuResultMap">
+        SELECT
+        <include refid="menuColumn"/>
+        FROM sys_menu
+        ORDER BY sort ASC, id ASC
+    </select>
+
+    <!-- ==================== UPDATE ==================== -->
+
+    <!-- 全量更新：修改语义为覆盖式，parent_id/path/perms/icon 允许置空 -->
+    <update id="updateMenu" parameterType="com.jiege.community.entity.Menu">
+        UPDATE sys_menu
+        SET parent_id   = #{parentId},
+            menu_name   = #{menuName},
+            path        = #{path},
+            perms       = #{perms},
+            type        = #{type},
+            icon        = #{icon},
+            sort        = #{sort},
+            update_time = #{updateTime}
+        WHERE menu_id = #{menuId}
+    </update>
+
+    <!-- ==================== DELETE ==================== -->
+
+    <delete id="deleteMenu">
+        DELETE
+        FROM sys_menu
+        WHERE menu_id = #{menuId}
+    </delete>
+
+    <select id="countChildMenu" resultType="int">
+        SELECT COUNT(*)
+        FROM sys_menu
+        WHERE parent_id = #{parentId}
+    </select>
+
+    <select id="countRoleMenu" resultType="int">
+        SELECT COUNT(*)
+        FROM sys_role_menu
+        WHERE menu_id = #{menuId}
+    </select>
+
+</mapper>

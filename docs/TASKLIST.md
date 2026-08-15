@@ -43,16 +43,17 @@ graph LR
 - [X] 状态启用/禁用(0-禁用 1-启用,RoleStatus 枚举)
 - [X] 联调通过(2026-08-15):新增、roleKey 查重 10102、修改、禁用/启用、列表(游标 DESC 排序正确、page2 无 lastId 返回 40000)、删除、删除后查询 10104
 
-### 阶段 3:菜单权限模块(Menu)
+### 阶段 3:菜单权限模块(Menu)(已完成)
 
-- [ ] 建表 sys_menu(menu_id / parent_id 树形 / menu_name / path / perms / type / icon / sort / status)
+- [x] 建表 sys_menu(menu_id / parent_id 树形 / menu_name / path / perms / type / icon / sort / status)+ 提前建 sys_role_menu(支撑删除前校验角色引用)
 - [X] 解决重名问题:enums/Menu.java 已改名 MenuType,枚举值已填全 DIRECTORY(1)/MENU(2)/BUTTON(3)
-- [ ] Menu 实体、MenuDao、MenuService、MenuController
-- [ ] 接口:增删改 + 全部菜单树;删除前校验子菜单/角色引用
+- [x] Menu 实体(含字段注释)、MenuDao(MenuDao.xml)、MenuService、MenuController、MenuCreateRequestBody/MenuUpdateRequestBody、MenuVO(树形含 children)、MenuStatus 枚举
+- [x] 接口:POST /menu、PUT /menu、DELETE /menu/{menuId}(有子菜单 10205/被角色引用 10206 禁止)、GET /menu/tree(全部菜单树,含禁用);修改时 parentId 不能指向自己(防循环)
+- [x] 联调通过(2026-08-16):新增目录/子菜单/按钮、名称查重 10201、perms 查重 10202、父菜单不存在 10207、树三级结构、修改、parentId=self 10207、有子菜单删除 10205、被角色引用删除 10206(SQL 直插关联验证)、删除后重删 10204,共 19 项全部通过
 
 ### 阶段 4:关联与分配
 
-- [~] 建表 sys_user_role(user_id + role_id)、sys_role_menu(role_id + menu_id)——sys_user_role 已在阶段 2 提前建,剩 sys_role_menu
+- [x] 建表 sys_user_role(user_id + role_id)、sys_role_menu(role_id + menu_id)——两张关联表已分别于阶段 2/3 提前建
 - [ ] 给用户分配角色:PUT /user/{userId}/roles + 回显接口 GET /user/{userId}/roles
 - [ ] 给角色分配菜单:PUT /role/{roleId}/menus + 回显接口 GET /role/{roleId}/menus
 
