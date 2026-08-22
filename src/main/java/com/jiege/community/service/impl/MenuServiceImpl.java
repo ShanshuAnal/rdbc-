@@ -49,19 +49,7 @@ public class MenuServiceImpl implements MenuService {
         if (request.getParentId() != null && menuDao.selectByMenuId(request.getParentId()) == null) {
             throw new BusinessException(ResponseCode.MENU_PARENT_NOT_EXISTS);
         }
-        Menu menu = Menu.builder()
-                .menuId(UUID.randomUUID().toString())
-                .parentId(request.getParentId())
-                .menuName(request.getMenuName())
-                .path(request.getPath())
-                .perms(request.getPerms())
-                .type(request.getType())
-                .icon(request.getIcon())
-                .sort(request.getSort() == null ? 0 : request.getSort())
-                .status(MenuStatus.NORMAL.getStatus())
-                .createTime(LocalDateTime.now())
-                .updateTime(LocalDateTime.now())
-                .build();
+        Menu menu = buildMenu(request);
         menuDao.insert(menu);
         return new MenuVO(menu);
     }
@@ -125,7 +113,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<MenuVO> getMenuTree() {
         List<Menu> menus = menuDao.selectAll();
-        List<MenuVO> vos = menus.stream().map(MenuVO::new).collect(Collectors.toList());
+        List<MenuVO> vos = menus.stream().map(MenuVO::new).toList();
         // menuId -> VO 映射，用于按 parentId 挂载子节点
         Map<String, MenuVO> map = vos.stream()
                 .collect(Collectors.toMap(MenuVO::getMenuId, Function.identity()));
@@ -144,5 +132,21 @@ public class MenuServiceImpl implements MenuService {
             }
         }
         return roots;
+    }
+
+    private Menu buildMenu(MenuCreateRequestBody request) {
+        return Menu.builder()
+                .menuId(UUID.randomUUID().toString())
+                .parentId(request.getParentId())
+                .menuName(request.getMenuName())
+                .path(request.getPath())
+                .perms(request.getPerms())
+                .type(request.getType())
+                .icon(request.getIcon())
+                .sort(request.getSort() == null ? 0 : request.getSort())
+                .status(MenuStatus.NORMAL.getStatus())
+                .createTime(LocalDateTime.now())
+                .updateTime(LocalDateTime.now())
+                .build();
     }
 }

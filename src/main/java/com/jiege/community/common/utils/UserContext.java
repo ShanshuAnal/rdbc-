@@ -10,7 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 /**
  * @Author: 19599
  * @Date: 2026/8/16 4:33
- * @Description:
+ * @Description: 用户上下文
  */
 public class UserContext {
 
