@@ -129,7 +129,6 @@
     </select>
 
     <!-- ==================== UPDATE ==================== -->
-
     <!-- 全量更新：修改语义为覆盖式，parent_id/path/perms/icon 允许置空 -->
     <update id="updateMenu" parameterType="com.jiege.community.entity.Menu">
         UPDATE sys_menu
@@ -145,7 +144,6 @@
     </update>
 
     <!-- ==================== DELETE ==================== -->
-
     <delete id="deleteMenu">
         DELETE
         FROM sys_menu
@@ -163,5 +161,4 @@
         FROM sys_role_menu
         WHERE menu_id = #{menuId}
     </select>
-
 </mapper>

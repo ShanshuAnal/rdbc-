@@ -95,8 +95,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public void deleteMenu(String menuId) {
-        Menu menu = menuDao.selectByMenuId(menuId);
-        if (menu == null) {
+        if (menuDao.selectByMenuId(menuId) == null) {
             throw new BusinessException(ResponseCode.MENU_NOT_EXISTS);
         }
         // 有子菜单禁止删除
@@ -112,11 +111,14 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuVO> getMenuTree() {
-        List<Menu> menus = menuDao.selectAll();
-        List<MenuVO> vos = menus.stream().map(MenuVO::new).toList();
-        // menuId -> VO 映射，用于按 parentId 挂载子节点
+        List<MenuVO> vos = menuDao.selectAll()
+                .stream()
+                .map(MenuVO::new)
+                .toList();
+
         Map<String, MenuVO> map = vos.stream()
                 .collect(Collectors.toMap(MenuVO::getMenuId, Function.identity()));
+
         List<MenuVO> roots = new ArrayList<>();
         for (MenuVO vo : vos) {
             if (vo.getParentId() == null) {

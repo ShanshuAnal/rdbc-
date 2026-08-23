@@ -1,5 +1,6 @@
 package com.jiege.community.controller;
 
+import com.jiege.community.dto.AssignRoleRequestBody;
 import com.jiege.community.dto.PageInfo;
 import com.jiege.community.dto.UserCreateRequestBody;
 import com.jiege.community.dto.UserUpdateRequestBody;
@@ -92,5 +93,18 @@ public class UserController {
         PageInfo pageInfo = new PageInfo(page, size, lastId);
         List<UserVO> users = userService.getUserList(pageInfo);
         return ResponseEntity.ok(HttpResponse.success(users));
+    }
+
+    /**
+     * 分配用户角色
+     *
+     * @param assignRoleRequestBody 分配角色信息
+     * @return 响应
+     */
+    @PutMapping("/{userId}/role")
+    public ResponseEntity<HttpResponse<Void>> assignRoles(@PathVariable String userId,
+                                                          @RequestBody @Valid AssignRoleRequestBody assignRoleRequestBody) {
+        userService.assignRoles(userId, assignRoleRequestBody);
+        return ResponseEntity.ok(HttpResponse.success());
     }
 }

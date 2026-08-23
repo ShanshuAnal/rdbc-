@@ -1,5 +1,6 @@
 package com.jiege.community.service;
 
+import com.jiege.community.dto.AssignRoleRequestBody;
 import com.jiege.community.dto.PageInfo;
 import com.jiege.community.dto.UserCreateRequestBody;
 import com.jiege.community.dto.UserUpdateRequestBody;
@@ -68,4 +69,12 @@ public interface UserService {
      * @return 用户
      */
     UserVO getUserByUsername(String username);
+
+    /**
+     * 分配用户角色
+     *
+     * @param userId                用户id
+     * @param assignRoleRequestBody 分配角色信息
+     */
+    void assignRoles(String userId, AssignRoleRequestBody assignRoleRequestBody);
 }
