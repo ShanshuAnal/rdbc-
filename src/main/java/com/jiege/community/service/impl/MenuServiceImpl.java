@@ -5,8 +5,8 @@ import com.jiege.community.dto.MenuCreateRequestBody;
 import com.jiege.community.dto.MenuUpdateRequestBody;
 import com.jiege.community.entity.Menu;
 import com.jiege.community.enums.MenuStatus;
-import com.jiege.community.enums.ResponseCode;
-import com.jiege.community.exception.BusinessException;
+import com.jiege.community.common.ResponseCode;
+import com.jiege.community.common.exception.BusinessException;
 import com.jiege.community.service.MenuService;
 import com.jiege.community.vo.MenuVO;
 import lombok.extern.slf4j.Slf4j;
@@ -49,19 +49,7 @@ public class MenuServiceImpl implements MenuService {
         if (request.getParentId() != null && menuDao.selectByMenuId(request.getParentId()) == null) {
             throw new BusinessException(ResponseCode.MENU_PARENT_NOT_EXISTS);
         }
-        Menu menu = Menu.builder()
-                .menuId(UUID.randomUUID().toString())
-                .parentId(request.getParentId())
-                .menuName(request.getMenuName())
-                .path(request.getPath())
-                .perms(request.getPerms())
-                .type(request.getType())
-                .icon(request.getIcon())
-                .sort(request.getSort() == null ? 0 : request.getSort())
-                .status(MenuStatus.NORMAL.getStatus())
-                .createTime(LocalDateTime.now())
-                .updateTime(LocalDateTime.now())
-                .build();
+        Menu menu = buildMenu(request);
         menuDao.insert(menu);
         return new MenuVO(menu);
     }
@@ -107,8 +95,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public void deleteMenu(String menuId) {
-        Menu menu = menuDao.selectByMenuId(menuId);
-        if (menu == null) {
+        if (menuDao.selectByMenuId(menuId) == null) {
             throw new BusinessException(ResponseCode.MENU_NOT_EXISTS);
         }
         // 有子菜单禁止删除
@@ -124,11 +111,14 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuVO> getMenuTree() {
-        List<Menu> menus = menuDao.selectAll();
-        List<MenuVO> vos = menus.stream().map(MenuVO::new).collect(Collectors.toList());
-        // menuId -> VO 映射，用于按 parentId 挂载子节点
+        List<MenuVO> vos = menuDao.selectAll()
+                .stream()
+                .map(MenuVO::new)
+                .toList();
+
         Map<String, MenuVO> map = vos.stream()
                 .collect(Collectors.toMap(MenuVO::getMenuId, Function.identity()));
+
         List<MenuVO> roots = new ArrayList<>();
         for (MenuVO vo : vos) {
             if (vo.getParentId() == null) {
@@ -144,5 +134,21 @@ public class MenuServiceImpl implements MenuService {
             }
         }
         return roots;
+    }
+
+    private Menu buildMenu(MenuCreateRequestBody request) {
+        return Menu.builder()
+                .menuId(UUID.randomUUID().toString())
+                .parentId(request.getParentId())
+                .menuName(request.getMenuName())
+                .path(request.getPath())
+                .perms(request.getPerms())
+                .type(request.getType())
+                .icon(request.getIcon())
+                .sort(request.getSort() == null ? 0 : request.getSort())
+                .status(MenuStatus.NORMAL.getStatus())
+                .createTime(LocalDateTime.now())
+                .updateTime(LocalDateTime.now())
+                .build();
     }
 }

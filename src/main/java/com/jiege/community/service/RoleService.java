@@ -60,4 +60,12 @@ public interface RoleService {
      * @return 角色列表
      */
     List<RoleVO> getRoleList(PageInfo pageInfo);
+
+    /**
+     * 根据角色ID列表查询已存在的角色
+     *
+     * @param roleIds 角色ID列表
+     * @return 角色ID列表
+     */
+    List<String> selectExistingRole(List<String> roleIds);
 }

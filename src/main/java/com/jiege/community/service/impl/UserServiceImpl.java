@@ -1,16 +1,15 @@
 package com.jiege.community.service.impl;
 
 import com.jiege.community.dao.UserDao;
-import com.jiege.community.dto.LoginRequestBody;
+import com.jiege.community.dto.AssignRoleRequestBody;
 import com.jiege.community.dto.PageInfo;
 import com.jiege.community.dto.UserCreateRequestBody;
 import com.jiege.community.dto.UserUpdateRequestBody;
 import com.jiege.community.entity.User;
-import com.jiege.community.enums.ResponseCode;
+import com.jiege.community.common.ResponseCode;
 import com.jiege.community.enums.UserStatus;
-import com.jiege.community.exception.BusinessException;
+import com.jiege.community.common.exception.BusinessException;
 import com.jiege.community.service.UserService;
-import com.jiege.community.vo.LoginVO;
 import com.jiege.community.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,26 +41,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserVO addUser(UserCreateRequestBody userCreateRequestBody) {
         // 用户名是否重复
-        User user = userDao.selectByUsername(userCreateRequestBody.getUsername());
-        if (user != null) {
+        if (userDao.selectByUsername(userCreateRequestBody.getUsername()) != null) {
             throw new BusinessException(ResponseCode.USERNAME_EXISTS);
         }
         // 邮箱是否重复
-        user = userDao.selectByEmail(userCreateRequestBody.getEmail());
-        if (user != null) {
+        if (userDao.selectByEmail(userCreateRequestBody.getEmail()) != null) {
             throw new BusinessException(ResponseCode.EMAIL_EXISTS);
         }
         // 手机号是否重复
-        user = userDao.selectByPhone(userCreateRequestBody.getPhone());
-        if (user != null) {
+        if (userDao.selectByPhone(userCreateRequestBody.getPhone()) != null) {
             throw new BusinessException(ResponseCode.PHONE_EXISTS);
         }
         // 构造User
-        User newUser = buildNewUser(userCreateRequestBody);
+        User user = buildNewUser(userCreateRequestBody);
         // 保存
-        userDao.insert(newUser);
+        userDao.insert(user);
         // 返回VO
-        return new UserVO(newUser);
+        return new UserVO(user);
     }
 
 
@@ -126,6 +122,11 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(ResponseCode.USER_NOT_EXISTS);
         }
         return new UserVO(user);
+    }
+
+    @Override
+    public void assignRoles(String userId, AssignRoleRequestBody assignRoleRequestBody) {
+
     }
 
 

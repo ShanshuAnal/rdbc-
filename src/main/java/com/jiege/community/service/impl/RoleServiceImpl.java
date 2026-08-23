@@ -5,9 +5,9 @@ import com.jiege.community.dto.PageInfo;
 import com.jiege.community.dto.RoleCreateRequestBody;
 import com.jiege.community.dto.RoleUpdateRequestBody;
 import com.jiege.community.entity.Role;
-import com.jiege.community.enums.ResponseCode;
+import com.jiege.community.common.ResponseCode;
 import com.jiege.community.enums.RoleStatus;
-import com.jiege.community.exception.BusinessException;
+import com.jiege.community.common.exception.BusinessException;
 import com.jiege.community.service.RoleService;
 import com.jiege.community.vo.RoleVO;
 import lombok.extern.slf4j.Slf4j;
@@ -116,6 +116,15 @@ public class RoleServiceImpl implements RoleService {
             roles = roleDao.getRoleListByCursor(pageInfo.getLastId(), pageInfo.getSize());
         }
         return roles.stream().map(RoleVO::new).toList();
+    }
+
+    @Override
+    public List<String> selectExistingRole(List<String> roleIds) {
+        if (roleIds == null || roleIds.isEmpty()) {
+            return List.of();
+        }
+        List<Role> roles = roleDao.selectByRoleIds(roleIds);
+        return roles.stream().map(Role::getRoleId).toList();
     }
 
 

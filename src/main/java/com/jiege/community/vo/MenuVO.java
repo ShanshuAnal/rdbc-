@@ -18,62 +18,62 @@ public class MenuVO {
     /**
      * 数据库主键（自增），游标分页等场景使用
      */
-    private Long id;
+    private final Long id;
 
     /**
      * 菜单业务ID，UUID
      */
-    private String menuId;
+    private final String menuId;
 
     /**
      * 父菜单业务ID，根菜单为NULL
      */
-    private String parentId;
+    private final String parentId;
 
     /**
      * 菜单名称
      */
-    private String menuName;
+    private final String menuName;
 
     /**
      * 路由地址
      */
-    private String path;
+    private final String path;
 
     /**
      * 权限标识，如 user:add
      */
-    private String perms;
+    private final String perms;
 
     /**
      * 菜单类型：1-目录，2-菜单，3-按钮
      */
-    private Integer type;
+    private final Integer type;
 
     /**
      * 图标
      */
-    private String icon;
+    private final String icon;
 
     /**
      * 显示排序
      */
-    private Integer sort;
+    private final Integer sort;
 
     /**
      * 菜单状态：0-禁用，1-正常
      */
-    private Integer status;
+    private final Integer status;
 
     /**
      * 创建时间
      */
-    private LocalDateTime createTime;
+    private final LocalDateTime createTime;
 
     /**
      * 子菜单列表（树形结构）
      */
-    private List<MenuVO> children;
+    private final List<MenuVO> children;
 
     public MenuVO(Menu menu) {
         this.id = menu.getId();

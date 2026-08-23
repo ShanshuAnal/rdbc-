@@ -2,7 +2,7 @@ package com.jiege.community.controller;
 
 import com.jiege.community.dto.MenuCreateRequestBody;
 import com.jiege.community.dto.MenuUpdateRequestBody;
-import com.jiege.community.entity.HttpResponse;
+import com.jiege.community.common.HttpResponse;
 import com.jiege.community.service.MenuService;
 import com.jiege.community.vo.MenuVO;
 import jakarta.validation.Valid;

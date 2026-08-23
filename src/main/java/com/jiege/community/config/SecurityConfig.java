@@ -1,8 +1,8 @@
 package com.jiege.community.config;
 
-import com.jiege.community.entity.HttpResponse;
-import com.jiege.community.enums.ResponseCode;
-import com.jiege.community.filter.JwtAuthenticationFilter;
+import com.jiege.community.common.HttpResponse;
+import com.jiege.community.common.ResponseCode;
+import com.jiege.community.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
