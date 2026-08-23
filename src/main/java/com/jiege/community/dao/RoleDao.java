@@ -33,4 +33,6 @@ public interface RoleDao {
     int deleteRole(@Param("roleId") String roleId);
 
     int countUserRole(@Param("roleId") String roleId);
+
+    List<Role> selectByRoleIds(List<String> roleIds);
 }

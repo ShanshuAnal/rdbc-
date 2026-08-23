@@ -27,7 +27,7 @@ public interface UserRoleDao {
      *
      * @param userId 用户ID
      */
-    void deleteByUserID(@Param("userId") int userId);
+    void deleteByUserId(@Param("userId") int userId);
 
 
     /**
@@ -36,6 +36,6 @@ public interface UserRoleDao {
      * @param userId 用户ID
      * @return 角色ID列表
      */
-    List<Integer> selectRoles(@Param("userId") int userId);
+    List<String> selectRoles(@Param("userId") String userId);
 
 }

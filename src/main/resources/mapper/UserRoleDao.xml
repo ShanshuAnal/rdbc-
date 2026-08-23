@@ -24,27 +24,25 @@
                 role_id
             </if>
         </trim>
-        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
-            <if test="userId != null">
-                #{userId},
-            </if>
-            <if test="roleId != null">
-                #{roleId}
-            </if>
-        </trim>
+        VALUES
+        <foreach collection="userRoleList" item="item" separator=",">
+            (#{item.userId}, #{item.roleId})
+        </foreach>
+
     </update>
 
-    <delete id="deleteByUserID">
+    <delete id="deleteByUserId">
         DELETE
         FROM sys_user_role
         WHERE user_id = #{userId}
     </delete>
 
-    <select id="selectRoles" resultType="java.lang.Integer">
+    <select id="selectRoles" resultType="java.lang.String">
         SELECT
         <include refid="userRoleColumn"/>
         FROM sys_user_role
         where user_id = #{userId}
+        ORDER BY id
     </select>
 
 </mapper>

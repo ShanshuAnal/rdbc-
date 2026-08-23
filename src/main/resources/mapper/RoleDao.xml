@@ -147,4 +147,14 @@
         WHERE role_id = #{roleId}
     </select>
 
+    <select id="selectByRoleIds" resultType="com.jiege.community.entity.Role">
+        SELECT
+        <include refid="roleColumn"/>
+        FROM sys_role
+        WHERE role_id IN
+        <foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+    </select>
+
 </mapper>

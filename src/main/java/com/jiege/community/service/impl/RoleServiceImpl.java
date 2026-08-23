@@ -118,6 +118,15 @@ public class RoleServiceImpl implements RoleService {
         return roles.stream().map(RoleVO::new).toList();
     }
 
+    @Override
+    public List<String> selectExistingRole(List<String> roleIds) {
+        if (roleIds == null || roleIds.isEmpty()) {
+            return List.of();
+        }
+        List<Role> roles = roleDao.selectByRoleIds(roleIds);
+        return roles.stream().map(Role::getRoleId).toList();
+    }
+
 
     private Role buildRole(RoleCreateRequestBody request) {
         return Role.builder()
